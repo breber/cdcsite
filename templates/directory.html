@@ -18,9 +18,6 @@
             <th style="text-align: center">
                 <b>Username</b>
             </th>
-            <th style="text-align: center">
-                <b>SSN</b>
-            </th>
             <th style="text-align: right">
                 <b>Actions</b>
             </th>
@@ -31,22 +28,21 @@
     <tr>
         <td>{{ employee.given_name }}</td>
         <td style="text-align: center">{{ employee.username }}</td>
-        <td style="text-align: center">{{ employee.ssn }}</td>
         <td style="text-align: right">
 
-            <a class="btn btn-primary" data-toggle="modal" href="#{{ employee.ssn }}">
+            <a class="btn btn-primary" data-toggle="modal" href="#{{ employee.key }}">
                 <span class="icon-edit icon-white"></span>
                 Edit
             </a>
 
-            <a class="btn btn-danger" href="/delete_employee/{{ employee.ssn }}">
+            <a class="btn btn-danger" href="/delete_employee/{{ employee.key }}">
                 <span class="icon-remove icon-white"></span>
                 Delete
             </a>
         </td>
     </tr>
 
-    <div id="{{ employee.ssn }}" class="modal hide fade in" style="display: none; ">
+    <div id="{{ employee.key }}" class="modal hide fade in" style="display: none; ">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
             <h3>Edit Employee</h3>
@@ -55,20 +51,13 @@
             <h4>{{ employee.given_name }}</h4>
 
 
-            <form id="edit-form-{{ employee.ssn }}" class="form form-horizontal" method="post">
+            <form id="edit-form-{{ employee.key }}" class="form form-horizontal" method="post">
 
 
                 <div class="control-group">
                     <label class="control-label" for="edit_given_name">Given Name</label>
                     <div class="controls">
                         <input type="text" id="edit_given_name" name="edit_given_name" value="{{ employee.given_name }}"/>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label" for="edit_ssn">SSN</label>
-                    <div class="controls">
-                        <input type="text" id="edit_ssn" name="edit_ssn" value="{{ employee.ssn }}"/>
                     </div>
                 </div>
 
@@ -82,7 +71,7 @@
                 <div class="control-group">
                     <label class="control-label" for="edit_password">Password</label>
                     <div class="controls">
-                        <input type="text" id="edit_password" name="edit_password" value="{{ employee.password }}"/>
+                        <input type="password" id="edit_password" name="edit_password" value="{{ employee.password }}"/>
                     </div>
                 </div>
 
@@ -98,7 +87,7 @@
 
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-success" id="modal-edit-submit-{{ employee.ssn }}">Save</button>
+            <button type="submit" class="btn btn-success" id="modal-edit-submit-{{ employee.key }}">Save</button>
             <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
@@ -115,10 +104,6 @@
         <h3>Add Employee</h3>
     </div>
     <div class="modal-body">
-
-        <p>You can add some text here.</p>
-
-
         <form id="add-form" class="form form-horizontal" method="post">
             <div class="control-group">
                 <label class="control-label" for="given_name">Given Name</label>
@@ -144,7 +129,7 @@
             <div class="control-group">
                 <label class="control-label" for="password">Password</label>
                 <div class="controls">
-                    <input type="text" id="password" name="password"/>
+                    <input type="password" id="password" name="password"/>
                 </div>
             </div>
         </form>
@@ -170,12 +155,12 @@
 
 {% for employee in employees %}
 <script>
-    $('#modal-edit-submit-{{ employee.ssn }}').on('click', function(e){
+    $('#modal-edit-submit-{{ employee.key }}').on('click', function(e){
         // We don't want this to act as a link so cancel the link action
         e.preventDefault();
 
         // Find form and submit it
-        $('#edit-form-{{ employee.ssn}}').submit();
+        $('#edit-form-{{ employee.key }}').submit();
     });
 </script>
 

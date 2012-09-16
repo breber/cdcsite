@@ -199,9 +199,9 @@ class edit_profile(BaseHandler):
 
 
 class delete_employee(webapp2.RequestHandler):
-    def get(self, employee_ssn):
-        ssn = str(urllib.unquote(employee_ssn))
-        fired = models.Account.all().filter('ssn =', ssn).fetch(1)[0]
+    def get(self, employee_key):
+        key = str(urllib.unquote(employee_key))
+        fired = models.Account.all().filter('key =', key).fetch(1)[0]
         fired.delete()
         self.redirect('/directory')
 
