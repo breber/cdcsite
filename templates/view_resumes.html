@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{%  block content %}
+
+<br>
+<h1>Resume Uploads</h1>
+<br>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>
+            <b>First Name</b>
+        </th>
+        <th style="text-align: center">
+            <b>Surname</b>
+        </th>
+        <th style="text-align: center">
+            <b>Email</b>
+        </th>
+        <th style="text-align: right">
+            <b>Actions</b>
+        </th>
+    </tr>
+    </thead>
+    {% for resume in resumes %}
+
+    <tr>
+        <td>{{ resume.given_name }}</td>
+        <td style="text-align: center">{{ resume.surname }}</td>
+        <td style="text-align: center">{{ resume.email }}</td>
+
+        <td style="text-align: right">
+            <a class="btn btn-primary" href="/resumes/{{ resume.blob }}">
+                <span class="icon-download icon-white"></span>
+                Download
+            </a>
+
+            <a class="btn btn-danger" href="/resume/delete/{{ resume.blob }}">
+                <span class="icon-remove icon-white"></span>
+                Delete
+            </a>
+        </td>
+    </tr>
+
+    {% endfor %}
+</table>
+
+{%  endblock %}

@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{%  block content %}
+
+
+<span style="text-align: right"><p><a data-toggle="modal" href="#addEmployee" class="btn btn-success btn-large">Add Employee</a></p></span>
+
+<br>
+<h1>Employee Directory</h1>
+
+<br>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <b>First Name</b>
+            </th>
+            <th style="text-align: center">
+                <b>Username</b>
+            </th>
+            <th style="text-align: center">
+                <b>SSN</b>
+            </th>
+            <th style="text-align: right">
+                <b>Actions</b>
+            </th>
+        </tr>
+    </thead>
+    {% for employee in employees %}
+
+    <tr>
+        <td>{{ employee.given_name }}</td>
+        <td style="text-align: center">{{ employee.username }}</td>
+        <td style="text-align: center">{{ employee.ssn }}</td>
+        <td style="text-align: right">
+
+            <a class="btn btn-primary" data-toggle="modal" href="#{{ employee.ssn }}">
+                <span class="icon-edit icon-white"></span>
+                Edit
+            </a>
+
+            <a class="btn btn-danger" href="/delete_employee/{{ employee.ssn }}">
+                <span class="icon-remove icon-white"></span>
+                Delete
+            </a>
+        </td>
+    </tr>
+
+    <div id="{{ employee.ssn }}" class="modal hide fade in" style="display: none; ">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Edit Employee</h3>
+        </div>
+        <div class="modal-body">
+            <h4>{{ employee.given_name }}</h4>
+
+
+            <form id="edit-form-{{ employee.ssn }}" class="form form-horizontal" method="post">
+
+
+                <div class="control-group">
+                    <label class="control-label" for="edit_given_name">Given Name</label>
+                    <div class="controls">
+                        <input type="text" id="edit_given_name" name="edit_given_name" value="{{ employee.given_name }}"/>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="edit_ssn">SSN</label>
+                    <div class="controls">
+                        <input type="text" id="edit_ssn" name="edit_ssn" value="{{ employee.ssn }}"/>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="edit_username">Username</label>
+                    <div class="controls">
+                        <input type="text" id="edit_username" name="edit_username" value="{{ employee.username }}"/>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="edit_password">Password</label>
+                    <div class="controls">
+                        <input type="text" id="edit_password" name="edit_password" value="{{ employee.password }}"/>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="hidden" name="edit_employee" value="{{ employee.key }}">
+                    </div>
+                </div>
+
+            </form>
+
+
+
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success" id="modal-edit-submit-{{ employee.ssn }}">Save</button>
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+        </div>
+    </div>
+
+    {% endfor %}
+
+
+
+</table>
+
+<div id="addEmployee" class="modal hide fade in" style="display: none; ">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Add Employee</h3>
+    </div>
+    <div class="modal-body">
+
+        <p>You can add some text here.</p>
+
+
+        <form id="add-form" class="form form-horizontal" method="post">
+            <div class="control-group">
+                <label class="control-label" for="given_name">Given Name</label>
+                <div class="controls">
+                    <input type="text" id="given_name" name="given_name"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="ssn">SSN</label>
+                <div class="controls">
+                    <input type="text" id="ssn" name="ssn"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="username">Username</label>
+                <div class="controls">
+                    <input type="text" id="username" name="username"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="password">Password</label>
+                <div class="controls">
+                    <input type="text" id="password" name="password"/>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success" id="modal-add-submit">Add Employee</button>
+        <!--<a href="#" class="btn btn-success">Call to action</a>-->
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+    </div>
+</div>
+
+<script>
+    $('#modal-add-submit').on('click', function(e){
+        // We don't want this to act as a link so cancel the link action
+        e.preventDefault();
+
+        // Find form and submit it
+        $('#add-form').submit();
+    });
+</script>
+
+
+{% for employee in employees %}
+<script>
+    $('#modal-edit-submit-{{ employee.ssn }}').on('click', function(e){
+        // We don't want this to act as a link so cancel the link action
+        e.preventDefault();
+
+        // Find form and submit it
+        $('#edit-form-{{ employee.ssn}}').submit();
+    });
+</script>
+
+{% endfor %}
+
+{%  endblock %}

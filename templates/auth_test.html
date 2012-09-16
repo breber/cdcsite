@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>This is a test of the new authentication system.</h3> <br>
+
+You are logged in as {{ user }}.<br><br>
+
+<h3>The new user object:</h3><br>
+{{ new_user_object }}<br><br>
+
+<h3>The old user object:</h3><br>
+{{ old_user_object }}
+
+{% endblock %}

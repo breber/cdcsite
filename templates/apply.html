@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{%  block content %}
+<br>
+<br>
+
+<div class="row">
+    <div class="span7">
+        <h1>Why work at CDC?</h1>
+        <br>
+        <p>Ever wonder what it was like to work at Apple, Google or Facebook when there were just twenty people at the company? Imagine building a company that sparked a movement. That's the kind of opportunity we're offering you at CDC.</p>
+
+        <p>CDC is a rapidly growing company. Our expansion continues at a breakneck speed and we need great people like you! Our team has been the cornerstone of our success. A passion for the product unites and motivates us. You belong here if you feel it too. You can help enrich the experience of our users and push forward the product in fresh and innovative ways. You will be asked to harness your talents and accomplish things you've never done before. You will make an impact.</p>
+        <br>
+        <form class="well span6 form-horizontal" action="{{ upload_url }}" method="POST" enctype="multipart/form-data">
+            <label><h1>Apply Now!</h1></label>
+            <br>
+            <div class="control-group">
+                <label class="control-label" for="given_name">Given Name</label>
+                <div class="controls">
+                    <input type="text" id="given_name" name="given_name"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="surname">Surname</label>
+                <div class="controls">
+                    <input type="text" id="surname" name="surname"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="surname">Email</label>
+                <div class="controls">
+                    <input type="text" id="email" name="email"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="resume">Resume</label>
+                <div class="controls">
+                    <input type="file" name="file" id="resume">
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn">Submit</button>
+        </form>
+
+    </div>
+
+    <div class="span5">
+        <br><br><br>
+        <table>
+            <tbody><tr>
+                <td style="text-align: center; vertical-align: middle; width:60px;"><img src="/static/img/icon_benefits_coverage.png"></td>
+                <td>
+                    <b>Medical &amp; dental coverage</b>
+                    <br>
+                    We are a fast growing company and we take care of everyone on our team.
+                </td>
+            </tr><tr>
+                <td>&nbsp;</td>
+            </tr><tr>
+                <td style="text-align: center; vertical-align: middle; width:60px;"><img src="/static/img/icon_benefits_gear.png"></td>
+                <td>
+                    <b>Apple gear</b>
+                    <br>
+                    You get the latest Apple tech to do amazing work. Macbook, iPad...
+                </td>
+            </tr><tr>
+                <td>&nbsp;</td>
+            </tr><tr>
+                <td style="text-align: center; vertical-align: middle; width:60px;"><img src="/static/img/icon_benefits_hacking.png"></td>
+                <td>
+                    <b>Hackathons</b>
+                    <br>
+                    Brainstorm and work on fresh ideas once a week. A day to do something different.
+                </td>
+            </tr><tr>
+                <td>&nbsp;</td>
+            </tr><tr>
+                <td style="text-align: center; vertical-align: middle; width:60px;"><img src="/static/img/icon_benefits_culture.png"></td>
+                <td>
+                    <b>Great culture</b>
+                    <br>
+                    Work in laid back environment. We hold NERF battles, movie nights and more.
+                </td>
+            </tr><tr>
+                <td>&nbsp;</td>
+            </tr><tr>
+                <td style="text-align: center; vertical-align: middle; width:60px;"><img src="/static/img/icon_benefits_meals.png"></td>
+                <td>
+                    <b>Free daily meals</b>
+                    <br>
+                    Tasty meals by our Chef in the office every day plus unlimited cereal, drinks, chips...
+                </td>
+
+            </tr>
+            </tbody></table>
+    </div>
+</div>
+
+        <br>
+        <br>
+        <br>
+
+<div class="row">
+
+
+</div>
+
+{%  endblock %}
