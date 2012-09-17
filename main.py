@@ -325,39 +325,6 @@ class logout(BaseHandler):
 
 		self.redirect('/')
 
-
-# I am testing a new authentication system that should be better than the
-# one I have now.  I have it mostly set up, but I need to either figure out
-# how to store user info on the new user model, or some other way to securely
-# handle user authentication.  Remove this later.  -- Michael
-class test(BaseHandler):
-    @user_required
-    def get(self):
-        context = utils.get_context(auth.get_auth())
-
-        #
-        current_session = self.auth.get_user_by_session()
-        logging.error(current_session);
-        new_user_object = self.auth.store.user_model.get_by_auth_token(current_session['user_id'], current_session['token'])[0]
-        logging.error(new_user_object);
-        username = new_user_object.auth_ids[0]
-        old_user_object = models.Account.all().filter('username =', username).fetch(1)[0].__dict__['_entity']
-
-        if 'user' in self.request.GET:
-            new_user_object = self.auth.store.user_model.get_by_auth_id(self.request.GET['user'])
-            old_user_object = models.Account.all().filter('username =', self.request.GET['user']).fetch(1)[0].__dict__['_entity']
-            username = new_user_object.auth_ids[0]
-
-
-        context['current_session'] = current_session
-        context['new_user_object'] = new_user_object
-        context['user'] = username
-        context['old_user_object'] = old_user_object
-
-        path = os.path.join(os.path.dirname(__file__),
-            'templates/auth_test.html')
-        self.response.out.write(template.render(path, context))
-
 config = {}
 config['webapp2_extras.sessions'] = {
     'secret_key': 'some-secret-key',
@@ -372,7 +339,6 @@ app = webapp2.WSGIApplication([('/', MainHandler),
                                 ('/upload', resume_upload),
                                 ('/login', login),
                                 ('/logout', logout),
-                                ('/test', test),
                                 ('/edit', edit_employee),
                                 ('/thanks', thanks),
                                 ('/profile', edit_profile),
