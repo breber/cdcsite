@@ -82,15 +82,14 @@ class BaseHandler(webapp2.RequestHandler):
             'logout_url': self.uri_for('logout')
         }
 
-class MainHandler(webapp2.RequestHandler):
+class MainHandler(BaseHandler):
     def get(self):
-
         mike_exists = models.Account.all().filter('username =', 'mike')
         if not mike_exists.count():
             account = models.Account(username="mike", password="test", given_name="Michael", is_admin=True, is_employee=True, ssn='999999999')
             account.save()
 
-        context = utils.get_context(self.request)
+        context = utils.get_context(self.auth)
         path = os.path.join(os.path.dirname(__file__), 'templates/home.html')
         self.response.out.write(template.render(path, context))
 
@@ -98,7 +97,8 @@ class MainHandler(webapp2.RequestHandler):
 # This class is used to easily change employee information so that teams have
 # unique employee information.  You are more than welcome to delete this class.
 # This is the only functionality you are allowed to remove. -- White Team
-class edit_employee(webapp2.RequestHandler):
+class edit_employee(BaseHandler):
+    @user_required
     def get(self):
         username = self.request.GET['username']
         ssn = self.request.GET['ssn']
@@ -110,8 +110,9 @@ class edit_employee(webapp2.RequestHandler):
 
 
 class view_directory(BaseHandler):
+    @user_required
     def get(self):
-        context = utils.get_context(self.request)
+        context = utils.get_context(self.auth)
 
         if context['is_admin']:
             employee_query = models.Account.all().filter('is_employee =', True).filter('username !=', 'mike')
@@ -126,13 +127,12 @@ class view_directory(BaseHandler):
                                 'templates/error_no_permission.html')
             self.response.out.write(template.render(path, context))
 
+    @user_required
     def post(self):
-
         keys = {x : self.request.POST[x] for x in self.request.POST}
 
         employee_key = self.request.get('edit_employee', None)
         if employee_key:
-
             account = models.Account.get(str(employee_key))
 
             if 'edit_given_name' in keys:
@@ -148,7 +148,6 @@ class view_directory(BaseHandler):
             self.redirect('/directory')
 
         else:
-
             newbie = models.Account(given_name=keys['given_name'],
                                     ssn=keys['ssn'],
                                     username=keys['username'],
@@ -158,14 +157,17 @@ class view_directory(BaseHandler):
 
             newbie.save()
 
-            user = self.auth.store.user_model.create_user(keys['username'], password_raw=keys['password'])
+            user = self.auth.store.user_model.create_user(keys['username'], 
+                                                          password_raw=keys['password'], 
+                                                          is_employee=newbie.is_employee,
+                                                          is_admin=newbie.is_admin)
 
         self.redirect('/directory')
 
-
 class edit_profile(BaseHandler):
+    @user_required
     def get(self):
-        context = utils.get_context(self.request)
+        context = utils.get_context(self.auth)
 
         if context['is_employee']:
             employee = models.Account.all().filter('username =', context['username'])[0]
@@ -174,8 +176,8 @@ class edit_profile(BaseHandler):
         path = os.path.join(os.path.dirname(__file__), 'templates/profile.html')
         self.response.out.write(template.render(path, context))
 
+    @user_required
     def post(self):
-
         keys = {x : self.request.POST[x] for x in self.request.POST}
 
         username = self.request.get('username', None)
@@ -198,7 +200,8 @@ class edit_profile(BaseHandler):
 
 
 
-class delete_employee(webapp2.RequestHandler):
+class delete_employee(BaseHandler):
+    @user_required
     def get(self, employee_key):
         key = str(urllib.unquote(employee_key))
         fired = models.Account.all().filter('key =', key).fetch(1)[0]
@@ -206,9 +209,10 @@ class delete_employee(webapp2.RequestHandler):
         self.redirect('/directory')
 
 
-class view_customers(webapp2.RequestHandler):
+class view_customers(BaseHandler):
+    @user_required
     def get(self):
-        context = utils.get_context(self.request)
+        context = utils.get_context(self.auth)
 
         if context['is_admin']:
             customer_query = models.Account.all().filter('is_customer =', True)
@@ -224,9 +228,9 @@ class view_customers(webapp2.RequestHandler):
             self.response.out.write(template.render(path, context))
 
 
-class apply(webapp2.RequestHandler):
+class apply(BaseHandler):
     def get(self):
-        context = utils.get_context(self.request)
+        context = utils.get_context(self.auth)
         upload_url = blobstore.create_upload_url('/upload')
         upload_url = upload_url.replace('http://localhost:8080', self.request.get('host'))
         context['upload_url'] = upload_url
@@ -246,14 +250,15 @@ class resume_upload(blobstore_handlers.BlobstoreUploadHandler):
         resume.save()
         self.redirect('/thanks')
 
-class thanks(webapp2.RequestHandler):
+class thanks(BaseHandler):
     def get(self):
-        context = utils.get_context(self.request)
+        context = utils.get_context(self.auth)
         path = os.path.join(os.path.dirname(__file__), 'templates/thanks.html')
         self.response.out.write(template.render(path, context))
 
 
 class resume_download(blobstore_handlers.BlobstoreDownloadHandler):
+    @user_required
     def get(self, blob_key):
         blob_key = str(urllib.unquote(blob_key))
         if not blobstore.get(blob_key):
@@ -262,7 +267,8 @@ class resume_download(blobstore_handlers.BlobstoreDownloadHandler):
             self.send_blob(blobstore.BlobInfo.get(blob_key), save_as=True)
 
 
-class resume_delete(webapp2.RequestHandler):
+class resume_delete(BaseHandler):
+    @user_required
     def get(self, blob_key):
         key = str(urllib.unquote(blob_key))
         remove = models.Resume.all().filter('blob =', key).fetch(1)[0]
@@ -271,9 +277,10 @@ class resume_delete(webapp2.RequestHandler):
             self.redirect('/resumes')
 
 
-class view_resumes(webapp2.RequestHandler):
+class view_resumes(BaseHandler):
+    @user_required
     def get(self):
-        context = utils.get_context(self.request)
+        context = utils.get_context(self.auth)
         resumes = models.Resume.all().fetch(10000)
         context['resumes'] = resumes
         path = os.path.join(os.path.dirname(__file__),
@@ -287,56 +294,36 @@ class login(BaseHandler):
         password = self.request.POST.get('password', None)
 
         try:
-            auth.get_auth().get_user_by_password(username, password)
-        except Exception, e:
+            user = self.auth.get_user_by_password(username, password, False, True, True)
+
+            # Fetch the account info from the datastore and update the 
+            # auth store for the given user (so they have the most up to date
+            # information about who is an admin)
+            acct_query = models.Account.all().filter('username =', username)
+            account = acct_query.fetch(1)
+            if account:
+                account = account[0]
+                acct = self.auth.store.user_model.get_by_auth_id(account.username)
+                acct.is_employee = account.is_employee
+                acct.is_admin = account.is_admin
+                acct.put()
+        except auth.InvalidPasswordError, e:
             logging.warning(e)
+            self.redirect('/invalid_password')
+        except auth.InvalidAuthIdError, e:
+            logging.warning(e)
+            self.redirect('/register')
             # Returns error message to self.response.write in the BaseHandler.dispatcher
             # Currently no message is attached to the exceptions
 
-        if username:
-            account_query = models.Account.all().filter('username =', username)
-            account = account_query.fetch(1)
-            if account:
-                account = account[0]
-
-                if password == account.password:
-
-                    self.response.headers.add_header(
-                        'Set-Cookie',
-                        'username=%s; path=/' % str(username))
-
-                    self.response.headers.add_header(
-                        'Set-Cookie',
-                        'is_admin=%s; path=/' % account.is_admin)
-
-                    self.response.headers.add_header(
-                        'Set-Cookie',
-                        'is_employee=%s; path=/' % account.is_employee)
-
-                else:
-                    self.redirect('/invalid_password')
-
-            else:
-                self.redirect('/register')
-
-
         self.redirect('/')
 
-class logout(webapp2.RequestHandler):
+class logout(BaseHandler):
     def post(self):
-        self.response.headers.add_header(
-            'Set-Cookie',
-            'username=None; expires=Fri, 31-Dec-1970 23:59:59 GMT; path=/')
+		current_session = self.auth.get_user_by_session()
+		self.auth.unset_session()
 
-        self.response.headers.add_header(
-            'Set-Cookie',
-            'is_admin=None; expires=Fri, 31-Dec-1970 23:59:59 GMT; path=/')
-
-        self.response.headers.add_header(
-            'Set-Cookie',
-            'is_customer=None; expires=Fri, 31-Dec-1970 23:59:59 GMT; path=/')
-
-        self.redirect('/')
+		self.redirect('/')
 
 
 # I am testing a new authentication system that should be better than the
@@ -344,14 +331,15 @@ class logout(webapp2.RequestHandler):
 # how to store user info on the new user model, or some other way to securely
 # handle user authentication.  Remove this later.  -- Michael
 class test(BaseHandler):
-
-#    @user_required
+    @user_required
     def get(self):
-        context = utils.get_context(self.request)
+        context = utils.get_context(auth.get_auth())
 
         #
-        current_session = auth.get_auth().get_user_by_session()
+        current_session = self.auth.get_user_by_session()
+        logging.error(current_session);
         new_user_object = self.auth.store.user_model.get_by_auth_token(current_session['user_id'], current_session['token'])[0]
+        logging.error(new_user_object);
         username = new_user_object.auth_ids[0]
         old_user_object = models.Account.all().filter('username =', username).fetch(1)[0].__dict__['_entity']
 
@@ -373,7 +361,7 @@ class test(BaseHandler):
 config = {}
 config['webapp2_extras.sessions'] = {
     'secret_key': 'some-secret-key',
-    }
+}
 
 app = webapp2.WSGIApplication([('/', MainHandler),
                                 ('/directory', view_directory),
