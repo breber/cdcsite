@@ -2,7 +2,6 @@
 
 {%  block content %}
 
-
 <span style="text-align: right"><p><a data-toggle="modal" href="#addEmployee" class="btn btn-success btn-large">Add Employee</a></p></span>
 
 <br>
@@ -29,7 +28,6 @@
         <td>{{ employee.given_name }}</td>
         <td style="text-align: center">{{ employee.username }}</td>
         <td style="text-align: right">
-
             <a class="btn btn-primary" data-toggle="modal" href="#{{ employee.key }}">
                 <span class="icon-edit icon-white"></span>
                 Edit
@@ -49,11 +47,7 @@
         </div>
         <div class="modal-body">
             <h4>{{ employee.given_name }}</h4>
-
-
             <form id="edit-form-{{ employee.key }}" class="form form-horizontal" method="post">
-
-
                 <div class="control-group">
                     <label class="control-label" for="edit_given_name">Given Name</label>
                     <div class="controls">
@@ -80,11 +74,7 @@
                         <input type="hidden" name="edit_employee" value="{{ employee.key }}">
                     </div>
                 </div>
-
             </form>
-
-
-
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-success" id="modal-edit-submit-{{ employee.key }}">Save</button>
@@ -93,8 +83,6 @@
     </div>
 
     {% endfor %}
-
-
 
 </table>
 
@@ -151,7 +139,6 @@
         $('#add-form').submit();
     });
 </script>
-
 
 {% for employee in employees %}
 <script>
