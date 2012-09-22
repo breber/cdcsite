@@ -84,10 +84,10 @@ class BaseHandler(webapp2.RequestHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        mike_exists = models.Account.all().filter('username =', 'mike')
-        if not mike_exists.count():
-            account = models.Account(username="mike", password="test", given_name="Michael", is_admin=True, is_employee=True, ssn='999999999')
-            account.save()
+        #mike_exists = models.Account.all().filter('username =', 'mike')
+        #if not mike_exists.count():
+        #    account = models.Account(username="mike", password="test", given_name="Michael", is_admin=True, is_employee=True, ssn='999999999')
+        #    account.save()
 
         context = utils.get_context(self.auth)
         path = os.path.join(os.path.dirname(__file__), 'templates/home.html')
@@ -115,7 +115,7 @@ class view_directory(BaseHandler):
         context = utils.get_context(self.auth)
 
         if context['is_admin']:
-            employee_query = models.Account.all().filter('is_employee =', True).filter('username !=', 'mike')
+            employee_query = models.Account.all().filter('is_employee =', True)
             employees = employee_query.fetch(1000)
             context['employees'] = employees
             path = os.path.join(os.path.dirname(__file__),
