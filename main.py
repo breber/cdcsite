@@ -26,6 +26,7 @@ from webapp2_extras import sessions
 from google.appengine.ext.webapp import template
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.ext import db
 
 import models
 import utils
@@ -204,8 +205,11 @@ class delete_employee(BaseHandler):
     @user_required
     def get(self, employee_key):
         key = str(urllib.unquote(employee_key))
-        fired = models.Account.all().filter('key =', key).fetch(1)[0]
-        fired.delete()
+        k = db.Key.from_path("Account", key)
+        firedinitial = db.get(k)
+        if firedinitial:
+        	fired = firedinitial[0]
+        	fired.delete()
         self.redirect('/directory')
 
 
@@ -343,6 +347,6 @@ app = webapp2.WSGIApplication([('/', MainHandler),
                                 ('/thanks', thanks),
                                 ('/profile', edit_profile),
                                 ('/delete_employee/([^/]+)?', delete_employee)],
-                              debug=False, config=config)
+                              debug=True, config=config)
 
 
