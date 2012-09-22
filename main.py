@@ -258,7 +258,7 @@ class thanks(BaseHandler):
 
 
 class resume_download(blobstore_handlers.BlobstoreDownloadHandler):
-    @user_required
+    #@user_required
     def get(self, blob_key):
         blob_key = str(urllib.unquote(blob_key))
         if not blobstore.get(blob_key):
@@ -339,7 +339,7 @@ app = webapp2.WSGIApplication([('/', MainHandler),
                                 ('/upload', resume_upload),
                                 ('/login', login),
                                 ('/logout', logout),
-                                ('/edit', edit_employee),
+                                #('/edit', edit_employee),
                                 ('/thanks', thanks),
                                 ('/profile', edit_profile),
                                 ('/delete_employee/([^/]+)?', delete_employee)],
