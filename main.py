@@ -97,16 +97,16 @@ class MainHandler(BaseHandler):
 # This class is used to easily change employee information so that teams have
 # unique employee information.  You are more than welcome to delete this class.
 # This is the only functionality you are allowed to remove. -- White Team
-class edit_employee(BaseHandler):
-    @user_required
-    def get(self):
-        username = self.request.GET['username']
-        ssn = self.request.GET['ssn']
-
-        account = models.Account.all().filter('username =', username).fetch(1)
-        account = account[0]
-        account.ssn = ssn
-        account.save()
+#class edit_employee(BaseHandler):
+#    @user_required
+#    def get(self):
+#        username = self.request.GET['username']
+#        ssn = self.request.GET['ssn']
+#
+#        account = models.Account.all().filter('username =', username).fetch(1)
+#        account = account[0]
+#        account.ssn = ssn
+#        account.save()
 
 
 class view_directory(BaseHandler):
