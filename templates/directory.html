@@ -63,13 +63,6 @@
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="edit_password">Password</label>
-                    <div class="controls">
-                        <input type="password" id="edit_password" name="edit_password" value="{{ employee.password }}"/>
-                    </div>
-                </div>
-
-                <div class="control-group">
                     <div class="controls">
                         <input type="hidden" name="edit_employee" value="{{ employee.key }}">
                     </div>
@@ -125,7 +118,6 @@
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-success" id="modal-add-submit">Add Employee</button>
-        <!--<a href="#" class="btn btn-success">Call to action</a>-->
         <a href="#" class="btn" data-dismiss="modal">Close</a>
     </div>
 </div>
