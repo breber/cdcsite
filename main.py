@@ -153,7 +153,7 @@ class view_directory(BaseHandler):
                                     username=keys['username'],
                                     password=keys['password'],
                                     is_employee=True,
-                                    is_admin=True)
+                                    is_admin=False)
 
             newbie.save()
 
