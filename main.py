@@ -343,6 +343,6 @@ app = webapp2.WSGIApplication([('/', MainHandler),
                                 ('/thanks', thanks),
                                 ('/profile', edit_profile),
                                 ('/delete_employee/([^/]+)?', delete_employee)],
-                              debug=True, config=config)
+                              debug=False, config=config)
 
 
